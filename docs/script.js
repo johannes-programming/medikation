@@ -70,8 +70,13 @@ function listening(drug, unitName, inputEl, inputs, cfg) {
     if (targetUnit === unitName) continue;
     const toRatio = cfg.conv[drug][targetUnit];
     const converted = (val / fromRatio) * toRatio;
-    targetEl.value = converted.toFixed(4);
+    targetEl.value = floatToStr(converted);
   }
+}
+
+function floatToStr(value) {
+    const rounded = Number.parseFloat(value.toPrecision(4));
+    return rounded.toString();
 }
 
 
