@@ -34,15 +34,15 @@ function createLabeledInput(drug, unit, block) {
   wrapper.className = 'unit-input';
 
   const label = document.createElement('label');
-  label.textContent = unit + ':';
+  label.textContent = unit + "";
   label.setAttribute('for', `${drug}-${unit}`);
 
   const input = document.createElement('input');
   input.type = 'number';
   input.id = `${drug}-${unit}`;
 
-  wrapper.appendChild(label);
   wrapper.appendChild(input);
+  wrapper.appendChild(label);
   block.appendChild(wrapper);
 
   return input;
