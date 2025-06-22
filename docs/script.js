@@ -70,4 +70,8 @@ function setupConversionHandler(drug, unitName, inputEl, inputs, cfg) {
   });
 }
 
-loadConfigAndBuildUI().catch(console.error);
+function main() {
+  loadConfigAndBuildUI().catch(console.error);
+}
+
+main();
