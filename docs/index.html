@@ -9,9 +9,6 @@
       padding: 16px;
       margin: 16px 0;
     }
-    .medication-block h2 {
-      margin-top: 0;
-    }
     .unit-input {
       display: block;
       margin: 8px 0;
@@ -23,84 +20,62 @@
   </style>
 </head>
 <body>
-  <div class="medication-block" id="glucose-block">
-    <h2>Glucose</h2>
-    <div class="unit-input">
-      <label for="glucose-mg">mg:</label>
-      <input type="number" id="glucose-mg">
-    </div>
-    <div class="unit-input">
-      <label for="glucose-mmol">mmol:</label>
-      <input type="number" id="glucose-mmol">
-    </div>
-    <div class="unit-input">
-      <label for="glucose-ke">KE:</label>
-      <input type="number" id="glucose-ke">
-    </div>
-  </div>
-
-  <div class="medication-block" id="diazepam-block">
-    <h2>Diazepam</h2>
-    <div class="unit-input">
-      <label for="diazepam-mg">mg:</label>
-      <input type="number" id="diazepam-mg">
-    </div>
-    <div class="unit-input">
-      <label for="diazepam-mmol">mmol:</label>
-      <input type="number" id="diazepam-mmol">
-    </div>
-    <div class="unit-input">
-      <label for="diazepam-ggt">ggt:</label>
-      <input type="number" id="diazepam-ggt">
-    </div>
-  </div>
+  <div id="container"></div>
 
   <script>
-    // Glucose conversion logic
-    const glucoseMG = document.getElementById('glucose-mg');
-    const glucoseMMOL = document.getElementById('glucose-mmol');
-    const glucoseKE = document.getElementById('glucose-ke');
+    async function loadConfigAndBuildUI() {
+      const response = await fetch('cfg.json');
+      const cfg = await response.json();
+      const container = document.getElementById('container');
 
-    function updateGlucose(from) {
-      let mg;
-      if (from === 'mg') {
-        mg = parseFloat(glucoseMG.value) || 0;
-      } else if (from === 'mmol') {
-        mg = (parseFloat(glucoseMMOL.value) || 0) * 18.02;
-      } else if (from === 'ke') {
-        mg = (parseFloat(glucoseKE.value) || 0) * 10000;
+      for (const [drug, units] of Object.entries(cfg.conv)) {
+        const block = document.createElement('div');
+        block.className = 'medication-block';
+        block.innerHTML = `<h2>${drug}</h2>`;
+
+        const inputs = {};
+
+        for (const unit of Object.keys(units)) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'unit-input';
+
+          const label = document.createElement('label');
+          label.textContent = unit + ':';
+          label.setAttribute('for', `${drug}-${unit}`);
+
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.id = `${drug}-${unit}`;
+
+          wrapper.appendChild(label);
+          wrapper.appendChild(input);
+          block.appendChild(wrapper);
+
+          inputs[unit] = input;
+        }
+
+        // Hook up event listeners for all units
+        for (const [unitName, inputEl] of Object.entries(inputs)) {
+          inputEl.addEventListener('input', () => {
+            const val = parseFloat(inputEl.value);
+            if (isNaN(val)) return;
+
+            const fromRatio = cfg.conv[drug][unitName];
+
+            for (const [targetUnit, targetEl] of Object.entries(inputs)) {
+              if (targetUnit === unitName) continue;
+              const toRatio = cfg.conv[drug][targetUnit];
+              const converted = (val / fromRatio) * toRatio;
+              targetEl.value = converted.toFixed(4);
+            }
+          });
+        }
+
+        container.appendChild(block);
       }
-      glucoseMG.value = mg.toFixed(2);
-      glucoseMMOL.value = (mg / 18.02).toFixed(2);
-      glucoseKE.value = (mg / 10000).toFixed(4);
     }
 
-    glucoseMG.addEventListener('input', () => updateGlucose('mg'));
-    glucoseMMOL.addEventListener('input', () => updateGlucose('mmol'));
-    glucoseKE.addEventListener('input', () => updateGlucose('ke'));
-
-    // Diazepam conversion logic
-    const diazepamMG = document.getElementById('diazepam-mg');
-    const diazepamMMOL = document.getElementById('diazepam-mmol');
-    const diazepamGGT = document.getElementById('diazepam-ggt');
-
-    function updateDiazepam(from) {
-      let mg;
-      if (from === 'mg') {
-        mg = parseFloat(diazepamMG.value) || 0;
-      } else if (from === 'mmol') {
-        mg = (parseFloat(diazepamMMOL.value) || 0) * 10; // placeholder, as mmol <-> mg requires molar mass
-      } else if (from === 'ggt') {
-        mg = (parseFloat(diazepamGGT.value) || 0) / 3;
-      }
-      diazepamMG.value = mg.toFixed(2);
-      diazepamMMOL.value = (mg / 10).toFixed(2); // placeholder
-      diazepamGGT.value = (mg * 3).toFixed(2);
-    }
-
-    diazepamMG.addEventListener('input', () => updateDiazepam('mg'));
-    diazepamMMOL.addEventListener('input', () => updateDiazepam('mmol'));
-    diazepamGGT.addEventListener('input', () => updateDiazepam('ggt'));
+    loadConfigAndBuildUI().catch(console.error);
   </script>
 </body>
 </html>
