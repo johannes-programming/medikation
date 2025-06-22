@@ -55,20 +55,25 @@ function attachInputListeners(drug, inputs, cfg) {
 }
 
 function setupConversionHandler(drug, unitName, inputEl, inputs, cfg) {
-  inputEl.addEventListener('input', () => {
-    const val = parseFloat(inputEl.value);
-    if (isNaN(val)) return;
-
-    const fromRatio = cfg.conv[drug][unitName];
-
-    for (const [targetUnit, targetEl] of Object.entries(inputs)) {
-      if (targetUnit === unitName) continue;
-      const toRatio = cfg.conv[drug][targetUnit];
-      const converted = (val / fromRatio) * toRatio;
-      targetEl.value = converted.toFixed(4);
-    }
-  });
+  inputEl.addEventListener('input', () =>
+    listening(drug, unitName, inputEl, inputs, cfg)
+  );
 }
+
+function listening(drug, unitName, inputEl, inputs, cfg) {
+  const val = parseFloat(inputEl.value);
+  if (isNaN(val)) return;
+
+  const fromRatio = cfg.conv[drug][unitName];
+
+  for (const [targetUnit, targetEl] of Object.entries(inputs)) {
+    if (targetUnit === unitName) continue;
+    const toRatio = cfg.conv[drug][targetUnit];
+    const converted = (val / fromRatio) * toRatio;
+    targetEl.value = converted.toFixed(4);
+  }
+}
+
 
 function main() {
   loadConfigAndBuildUI().catch(console.error);
