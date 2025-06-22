@@ -4,81 +4,103 @@
   <meta charset="UTF-8">
   <title>Medication Unit Converter</title>
   <style>
-    .med-block {
+    .medication-block {
       border: 2px solid black;
-      padding: 15px;
-      margin: 20px;
-      width: 300px;
+      padding: 16px;
+      margin: 16px 0;
     }
-    .med-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 10px;
+    .medication-block h2 {
+      margin-top: 0;
     }
-    .unit-group {
-      margin: 10px 0;
+    .unit-input {
+      display: block;
+      margin: 8px 0;
     }
     label {
-      display: block;
-      margin-bottom: 3px;
-    }
-    input[type="number"] {
-      width: 100%;
-      padding: 5px;
-      box-sizing: border-box;
+      display: inline-block;
+      width: 80px;
     }
   </style>
 </head>
 <body>
-
-  <div class="med-block" data-drug="Ibuprofen">
-    <div class="med-title">Ibuprofen</div>
-    <div class="unit-group">
-      <label for="ibu-mg">Milligrams (mg)</label>
-      <input type="number" id="ibu-mg" data-unit="mg" data-base="1">
+  <div class="medication-block" id="glucose-block">
+    <h2>Glucose</h2>
+    <div class="unit-input">
+      <label for="glucose-mg">mg:</label>
+      <input type="number" id="glucose-mg">
     </div>
-    <div class="unit-group">
-      <label for="ibu-g">Grams (g)</label>
-      <input type="number" id="ibu-g" data-unit="g" data-base="1000">
+    <div class="unit-input">
+      <label for="glucose-mmol">mmol:</label>
+      <input type="number" id="glucose-mmol">
     </div>
-    <div class="unit-group">
-      <label for="ibu-mcg">Micrograms (mcg)</label>
-      <input type="number" id="ibu-mcg" data-unit="mcg" data-base="0.001">
+    <div class="unit-input">
+      <label for="glucose-ke">KE:</label>
+      <input type="number" id="glucose-ke">
     </div>
   </div>
 
-  <div class="med-block" data-drug="Paracetamol">
-    <div class="med-title">Paracetamol</div>
-    <div class="unit-group">
-      <label for="para-mg">Milligrams (mg)</label>
-      <input type="number" id="para-mg" data-unit="mg" data-base="1">
+  <div class="medication-block" id="diazepam-block">
+    <h2>Diazepam</h2>
+    <div class="unit-input">
+      <label for="diazepam-mg">mg:</label>
+      <input type="number" id="diazepam-mg">
     </div>
-    <div class="unit-group">
-      <label for="para-g">Grams (g)</label>
-      <input type="number" id="para-g" data-unit="g" data-base="1000">
+    <div class="unit-input">
+      <label for="diazepam-mmol">mmol:</label>
+      <input type="number" id="diazepam-mmol">
     </div>
-    <div class="unit-group">
-      <label for="para-mcg">Micrograms (mcg)</label>
-      <input type="number" id="para-mcg" data-unit="mcg" data-base="0.001">
+    <div class="unit-input">
+      <label for="diazepam-ggt">ggt:</label>
+      <input type="number" id="diazepam-ggt">
     </div>
   </div>
 
   <script>
-    document.querySelectorAll('.med-block').forEach(block => {
-      const inputs = block.querySelectorAll('input');
-      inputs.forEach(input => {
-        input.addEventListener('input', () => {
-          if (input.value === '') return;
-          const baseValue = parseFloat(input.value) * parseFloat(input.dataset.base);
-          inputs.forEach(other => {
-            if (other === input) return;
-            const converted = baseValue / parseFloat(other.dataset.base);
-            other.value = converted.toFixed(4);
-          });
-        });
-      });
-    });
-  </script>
+    // Glucose conversion logic
+    const glucoseMG = document.getElementById('glucose-mg');
+    const glucoseMMOL = document.getElementById('glucose-mmol');
+    const glucoseKE = document.getElementById('glucose-ke');
 
+    function updateGlucose(from) {
+      let mg;
+      if (from === 'mg') {
+        mg = parseFloat(glucoseMG.value) || 0;
+      } else if (from === 'mmol') {
+        mg = (parseFloat(glucoseMMOL.value) || 0) * 18.02;
+      } else if (from === 'ke') {
+        mg = (parseFloat(glucoseKE.value) || 0) * 10000;
+      }
+      glucoseMG.value = mg.toFixed(2);
+      glucoseMMOL.value = (mg / 18.02).toFixed(2);
+      glucoseKE.value = (mg / 10000).toFixed(4);
+    }
+
+    glucoseMG.addEventListener('input', () => updateGlucose('mg'));
+    glucoseMMOL.addEventListener('input', () => updateGlucose('mmol'));
+    glucoseKE.addEventListener('input', () => updateGlucose('ke'));
+
+    // Diazepam conversion logic
+    const diazepamMG = document.getElementById('diazepam-mg');
+    const diazepamMMOL = document.getElementById('diazepam-mmol');
+    const diazepamGGT = document.getElementById('diazepam-ggt');
+
+    function updateDiazepam(from) {
+      let mg;
+      if (from === 'mg') {
+        mg = parseFloat(diazepamMG.value) || 0;
+      } else if (from === 'mmol') {
+        mg = (parseFloat(diazepamMMOL.value) || 0) * 10; // placeholder, as mmol <-> mg requires molar mass
+      } else if (from === 'ggt') {
+        mg = (parseFloat(diazepamGGT.value) || 0) / 3;
+      }
+      diazepamMG.value = mg.toFixed(2);
+      diazepamMMOL.value = (mg / 10).toFixed(2); // placeholder
+      diazepamGGT.value = (mg * 3).toFixed(2);
+    }
+
+    diazepamMG.addEventListener('input', () => updateDiazepam('mg'));
+    diazepamMMOL.addEventListener('input', () => updateDiazepam('mmol'));
+    diazepamGGT.addEventListener('input', () => updateDiazepam('ggt'));
+  </script>
 </body>
 </html>
