@@ -8,6 +8,7 @@ async function loadConfigAndBuildUI() {
     }
 }
 
+
 function createMedicationBlock(drug, units, cfg, container) {
     const block = document.createElement('div');
     block.className = 'medication-block';
@@ -19,15 +20,15 @@ function createMedicationBlock(drug, units, cfg, container) {
     container.appendChild(block);
 }
 
+
 function createUnitInputs(drug, units, block) {
     const inputs = {};
-
     for (const unit of Object.keys(units)) {
         inputs[unit] = createLabeledInput(drug, unit, block);
     }
-
     return inputs;
 }
+
 
 function createLabeledInput(drug, unit, block) {
     const wrapper = document.createElement('div');
@@ -48,11 +49,13 @@ function createLabeledInput(drug, unit, block) {
     return input;
 }
 
+
 function attachInputListeners(drug, inputs, cfg) {
     for (const [unitName, inputEl] of Object.entries(inputs)) {
         setupConversionHandler(drug, unitName, inputEl, inputs, cfg);
     }
 }
+
 
 function setupConversionHandler(drug, unitName, inputEl, inputs, cfg) {
     inputEl.addEventListener('input', () =>
@@ -60,24 +63,24 @@ function setupConversionHandler(drug, unitName, inputEl, inputs, cfg) {
     );
 }
 
+
 function listening(drug, unitName, inputEl, inputs, cfg) {
     const val = parseFloat(inputEl.value);
-    if (isNaN(val)) {return;}
-
     const fromRatio = cfg.conv[drug][unitName];
-
     for (const [targetUnit, targetEl] of Object.entries(inputs)) {
         if (targetUnit === unitName) {continue;}
-        if (isNaN(val)) {
-            targetEl.value = NaN.toString();
-            continue;
-        }
         const toRatio = cfg.conv[drug][targetUnit];
         const converted = (val / fromRatio) * toRatio;
         targetEl.value = floatToStr(converted);
     }
 }
 
+
+function strToFloat(value) {
+    const trimmed = value.trim();
+    if (trimmed === "") {return 0.0;}
+    return parseFloat(trimmed);
+}
 function floatToStr(value) {
     const rounded = Number.parseFloat(value.toPrecision(4));
     return rounded.toString();
@@ -87,5 +90,6 @@ function floatToStr(value) {
 function main() {
     loadConfigAndBuildUI().catch(console.error);
 }
+
 
 main();
