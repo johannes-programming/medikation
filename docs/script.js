@@ -88,6 +88,7 @@ function floatToStr(value) {
 
 
 function main() {
+    addMetaAndLinkTags();
     loadConfigAndBuildUI().catch(console.error);
     addMetaAndLinkTags();
 }
