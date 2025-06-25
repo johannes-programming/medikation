@@ -10,9 +10,9 @@ async function loadConfigAndBuildUI() {
 
 function createMedicationBlock(drug, units, cfg) {
     const container = document.getElementById('container');
-    const block = document.createElement('div');
+    const block = document.createElement('dl');
     block.className = 'medication-block';
-    block.innerHTML = `<h2>${drug}</h2>`;
+    block.innerHTML = `<dt>${drug}</dt>`;
 
     const inputs = createUnitInputs(drug, units, block);
     for (const [unitName, inputEl] of Object.entries(inputs)) {
