@@ -1,7 +1,7 @@
 dl.medication-block {
     border: 2px solid black;
-    padding: 0.75em;
     margin: 0.75em 0;
+    padding: 0.75em;
 }
 dl.medication-block > dt {
     background-color: transparent;
@@ -11,7 +11,7 @@ dl.medication-block > dt {
     padding: 0;
 }
 dl.medication-block > dd {
-    margin: 0 0 2em 2em;
+    margin: 0 0 2em 1em;
     padding: 0;
 }
 
