@@ -9,16 +9,21 @@ async function loadConfigAndBuildUI() {
 
 
 function createMedicationBlock(drug, units, cfg) {
-    const container = document.getElementById('container');
-    const block = document.createElement('dl');
-    block.className = 'medication-block';
-    block.innerHTML = `<dt>${drug}</dt>`;
+    const calc_dl = document.createElement('dl');
+    calc_dl.className = 'medication-block';
+    const calc_dt = document.createElement('dt');
+    calc_dt.innerHTML = drug.toString();
+    const calc_dd = document.createElement('dd');
 
-    const inputs = createUnitInputs(drug, units, block);
+    const inputs = createUnitInputs(drug, units, calc_dd);
     for (const [unitName, inputEl] of Object.entries(inputs)) {
         setupConversionHandler(drug, unitName, inputEl, inputs, cfg);
     }
-    container.appendChild(block);
+    calc_dl.appendChild(calc_dt);
+    calc_dl.appendChild(calc_dd);
+    
+    const container = document.getElementById('container');
+    container.appendChild(calc_dl);
 }
 
 
