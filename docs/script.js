@@ -1,22 +1,23 @@
 async function loadConfigAndBuildUI() {
     const response = await fetch('cfg.json');
     const cfg = await response.json();
-    const container = document.getElementById('container');
 
     for (const [drug, units] of Object.entries(cfg.conv)) {
-        createMedicationBlock(drug, units, cfg, container);
+        createMedicationBlock(drug, units, cfg);
     }
 }
 
 
-function createMedicationBlock(drug, units, cfg, container) {
+function createMedicationBlock(drug, units, cfg) {
+    const container = document.getElementById('container');
     const block = document.createElement('div');
     block.className = 'medication-block';
     block.innerHTML = `<h2>${drug}</h2>`;
 
     const inputs = createUnitInputs(drug, units, block);
-    attachInputListeners(drug, inputs, cfg);
-
+    for (const [unitName, inputEl] of Object.entries(inputs)) {
+        setupConversionHandler(drug, unitName, inputEl, inputs, cfg);
+    }
     container.appendChild(block);
 }
 
@@ -50,11 +51,6 @@ function createLabeledInput(drug, unit, block) {
 }
 
 
-function attachInputListeners(drug, inputs, cfg) {
-    for (const [unitName, inputEl] of Object.entries(inputs)) {
-        setupConversionHandler(drug, unitName, inputEl, inputs, cfg);
-    }
-}
 
 
 function setupConversionHandler(drug, unitName, inputEl, inputs, cfg) {
