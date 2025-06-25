@@ -36,6 +36,7 @@ function createLabeledInput(drug, unit, block) {
     wrapper.className = 'unit-input';
 
     const label = document.createElement('label');
+    label.className = 'med-label';
     label.textContent = unit.toString();
     label.setAttribute('for', `${drug}-${unit}`);
 
