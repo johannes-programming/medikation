@@ -1,5 +1,7 @@
 dl.medication-block {
     border: 2px solid black;
+    padding: 16px;
+    margin: 16px 0;
 }
 dl.medication-block > dt {
     background-color: transparent;
