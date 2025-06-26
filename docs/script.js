@@ -58,19 +58,18 @@ function createUnitInputs(drug, units, block) {
 function createLabeledInput(drug, unit, block) {
     const wrapper = document.createElement('div');
     wrapper.className = 'unit-input';
+    block.appendChild(wrapper);
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.id = `${drug}-${unit}`;
+    wrapper.appendChild(input);
 
     const label = document.createElement('label');
     label.className = 'med-label';
     label.textContent = unit.toString();
     label.setAttribute('for', `${drug}-${unit}`);
-
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.id = `${drug}-${unit}`;
-
-    wrapper.appendChild(input);
     wrapper.appendChild(label);
-    block.appendChild(wrapper);
 
     return input;
 }
