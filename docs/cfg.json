@@ -1,9 +1,16 @@
 {
     "conv": {
         "Glucose": {
-          "g": 180.0,
-          "mol": 1.0,
-          "KE": 18.0
+            "g": 180.0,
+            "mol": 1.0,
+            "KE": 18.0
+        },
+        "Blutzucker":{
+            "mg/dL":100.0,
+            "mmol/L":5.6,
+            "IU Insulin bei DMT1":2.5,
+            "IU Insulin bei DMT2":3.3333333333,
+            "IU Insulin bei Steroiddiabetes":6.6666666666
         },
         "Diazepam": {
             "mg": 12.5,
