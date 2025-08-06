@@ -7,6 +7,12 @@
             "IU Insulin bei DMT2":3.3333333333,
             "IU Insulin bei Steroiddiabetes":6.6666666666
         },
+        "Clopixol":{
+            "mg":20.0,
+            "μmol":49.8790433199,
+            "ml":1.0,
+            "gtt":20.0
+        },
         "Diazepam": {
             "mg": 12.5,
             "μmol":43.8996979701,
@@ -21,12 +27,6 @@
         "Haloperidol":{
             "mg":2.0,
             "μmol":5.3211302081,
-            "ml":1.0,
-            "gtt":20.0
-        },
-        "Clopixol":{
-            "mg":20.0,
-            "μmol":49.8790433199,
             "ml":1.0,
             "gtt":20.0
         },
